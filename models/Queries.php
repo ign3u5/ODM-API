@@ -131,6 +131,17 @@ function GetQuery($queryName) {
                 LIMIT :limit"
             );
 
+        case "DurationFrequency":
+            return QueryResponse(
+                "SELECT tblShows.duration, COUNT(tblShows.show_id) 
+                FROM tblShows 
+                INNER JOIN tblShowTypes
+                    ON tblShows.type_id = tblShowTypes.type_id
+                WHERE tblShowTypes.description = :constraint
+                GROUP BY tblShows.duration
+                ORDER BY LENGTH(tblShows.duration), tblShows.duration ASC"
+            );
+
         default:
             return NewResponse(400, "Invalid param name");
     }
