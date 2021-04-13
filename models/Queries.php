@@ -158,7 +158,7 @@ function GetQuery($queryName) {
                 ORDER BY LENGTH(tblShows.duration), tblShows.duration ASC"
             );
 
-        case "Test":
+        case "ShowByRating":
             return QueryResponse(
                 "SELECT tblShows.title
                 FROM tblShows
@@ -169,7 +169,7 @@ function GetQuery($queryName) {
                 WHERE tblRatings.description = :constraint1"
             );
 
-        case "Test2":
+        case "ShowByRatingAndType":
             return QueryResponse(
                 "SELECT tblShows.title
                 FROM tblShows
