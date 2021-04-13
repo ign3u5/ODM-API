@@ -40,6 +40,10 @@
                 if (!$constraintParamResponse->IsFail())
                     $statementBuilder = $statementBuilder->AddWhereConstraintValue($constraintParamResponse->payload);
                 
+                $secondConstraintParamResponse = NewGetRequest("AndConstraint");
+                if (!$secondConstraintParamResponse->IsFail())
+                    $statementBuilder = $statementBuilder->AddWhereConstraintValue($secondConstraintParamResponse->payload);
+                
                 return $statementBuilder->Execute();
             }
             

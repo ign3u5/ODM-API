@@ -17,13 +17,27 @@ function GetQuery($queryName) {
 
         case "TotalRatings":
             return QueryResponse(
-            "SELECT 
-                description as 'Rating', 
-                COUNT(`show_id`) as 'Total' 
-            from `tblShowRatings`
-            inner join `tblRatings`
-                on `tblShowRatings`.`rating_id` = tblRatings.rating_id
-            group by tblShowRatings.rating_id"
+                "SELECT tblRatings.description, COUNT(tblShows.show_id)
+                FROM tblShows
+                INNER JOIN tblShowRatings
+                    ON tblShowRatings.show_id = tblShows.show_id
+                INNER JOIN tblRatings
+                    ON tblShowRatings.rating_id = tblRatings.rating_id
+                GROUP BY tblRatings.description"
+            );
+
+        case "TotalRatingsByShowType":
+            return QueryResponse(
+            "SELECT tblRatings.description, COUNT(tblShows.show_id)
+            FROM tblShows
+            INNER JOIN tblShowRatings
+                ON tblShowRatings.show_id = tblShows.show_id
+            INNER JOIN tblRatings
+                ON tblShowRatings.rating_id = tblRatings.rating_id
+            INNER JOIN tblShowTypes
+                ON tblShows.type_id = tblShowTypes.type_id
+            WHERE tblShowTypes.description = :constraint1
+            GROUP BY tblRatings.description"
             );
 
         case "TotalTvShowsForReleaseYears":
@@ -35,7 +49,8 @@ function GetQuery($queryName) {
 			INNER JOIN tblShowTypes
 				ON tblShows.type_id = tblShowTypes.type_id
 			WHERE tblShowTypes.description = 'TV Show' 
-			GROUP BY tblShows.year_of_release"
+			GROUP BY tblShows.year_of_release
+            ORDER BY LENGTH(tblShows.year_of_release), tblShows.year_of_release ASC"
             );
 
         case "TotalMoviesForReleaseYears":
@@ -47,7 +62,8 @@ function GetQuery($queryName) {
 			INNER JOIN tblShowTypes
 				ON tblShows.type_id = tblShowTypes.type_id
 			WHERE tblShowTypes.description = 'Movie' 
-			GROUP BY tblShows.year_of_release"
+			GROUP BY tblShows.year_of_release
+            ORDER BY LENGTH(tblShows.year_of_release), tblShows.year_of_release ASC"
             );
 
         case "TotalNumberOfSeasons":
@@ -115,7 +131,7 @@ function GetQuery($queryName) {
                     ON tblShows.show_id = tblShowCountries.show_id
                 INNER JOIN tblCountries
                     ON tblShowCountries.country_id = tblCountries.country_id
-                WHERE tblCountries.name = :constraint"
+                WHERE tblCountries.name = :constraint1"
             );
 
         case "TopFilmsForRating":
@@ -127,7 +143,7 @@ function GetQuery($queryName) {
                     ON tblShows.show_id = tblShowRatings.show_id
                 INNER JOIN tblRatings
                     ON tblShowRatings.rating_id = tblRatings.rating_id
-                WHERE tblRatings.description = :constraint
+                WHERE tblRatings.description = :constraint1
                 LIMIT :limit"
             );
 
@@ -137,9 +153,33 @@ function GetQuery($queryName) {
                 FROM tblShows 
                 INNER JOIN tblShowTypes
                     ON tblShows.type_id = tblShowTypes.type_id
-                WHERE tblShowTypes.description = :constraint
+                WHERE tblShowTypes.description = :constraint1
                 GROUP BY tblShows.duration
                 ORDER BY LENGTH(tblShows.duration), tblShows.duration ASC"
+            );
+
+        case "Test":
+            return QueryResponse(
+                "SELECT tblShows.title
+                FROM tblShows
+                INNER JOIN tblShowRatings
+                    ON tblShows.show_id = tblShowRatings.show_id
+                INNER JOIN tblRatings
+                    ON tblShowRatings.rating_id = tblRatings.rating_id
+                WHERE tblRatings.description = :constraint1"
+            );
+
+        case "Test2":
+            return QueryResponse(
+                "SELECT tblShows.title
+                FROM tblShows
+                INNER JOIN tblShowRatings
+                    ON tblShows.show_id = tblShowRatings.show_id
+                INNER JOIN tblRatings
+                    ON tblShowRatings.rating_id = tblRatings.rating_id
+                INNER JOIN tblShowTypes
+                	ON tblShows.type_id = tblShowTypes.type_id
+                WHERE tblRatings.description = :constraint1 AND tblShowTypes.description = :constraint2"
             );
 
         default:

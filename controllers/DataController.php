@@ -5,12 +5,14 @@
     class DataController{
         private $connection;
         private $statement;
+        private $constraintCounter = 0;
 
         public function __construct($database) {
             $this->connection = $database;
         }
 
         function BeginStatement($query) {
+            $this->constraintCounter = 0;
             $this->statement = $this->connection->prepare($query);
             return $this;
         }
@@ -23,7 +25,7 @@
     
         public function AddWhereConstraintValue($constraintValue)
         {
-            $this->statement->bindParam(":constraint", $constraintValue);
+            $this->statement->bindParam(":constraint".++$this->constraintCounter, $constraintValue);
             return $this;
         }
     
