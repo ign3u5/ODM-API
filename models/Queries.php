@@ -181,6 +181,20 @@ function GetQuery($queryName) {
                 	ON tblShows.type_id = tblShowTypes.type_id
                 WHERE tblRatings.description = :constraint1 AND tblShowTypes.description = :constraint2"
             );
+        
+        case "NumberOfShowsForReleaseYear":
+            return QueryResponse(
+                "SELECT tblShows.year_of_release, count(tblShows.show_id)
+                FROM tblShows
+                GROUP BY tblShows.year_of_release"
+            );
+
+        case "NumberOfShowsForAddedYear":
+            return QueryResponse(
+                "SELECT YEAR(tblShows.date_added), count(tblShows.show_id)
+                FROM tblShows
+                GROUP BY YEAR(tblShows.date_added)"
+            );
 
         default:
             return NewResponse(400, "Invalid param name");
