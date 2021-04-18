@@ -238,6 +238,32 @@ function GetQuery($queryName) {
                 LIMIT 1"
             );
 
+        case "ShowsFromReleaseYear":
+            return QueryResponse(
+                "SELECT tblShows.title, tblShows.description
+                FROM tblShows
+                WHERE tblShows.year_of_release = :constraint1"
+            );
+
+        case "TotalHours":
+            return QueryResponse(
+                "SELECT (SUM(tblShows.duration)/60) 
+                FROM tblShows
+                INNER JOIN tblShowTypes
+                    ON tblShows.type_id = tblShowTypes.type_id
+                WHERE tblShowTypes.description = 'Movie'"
+            );
+
+        case "HighestDurationFilms":
+            return QueryResponse(
+                "SELECT tblShows.title, tblShows.duration
+                FROM tblShows
+                INNER JOIN tblShowTypes
+                    ON tblShows.type_id = tblShowTypes.type_id
+                WHERE tblShowTypes.description = 'Movie'
+                ORDER BY tblShows.duration DESC"
+            );
+
         default:
             return NewResponse(400, "Invalid param name");
     }
