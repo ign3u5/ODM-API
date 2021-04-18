@@ -288,6 +288,15 @@ function GetQuery($queryName) {
                 WHERE tblGenres.name = :constraint1"
             );
 
+        case "AverageDuration":
+            return QueryResponse(
+                "SELECT avg(tblShows.duration)
+                FROM tblShows
+                INNER JOIN tblShowTypes
+                    ON tblShows.type_id = tblShowTypes.type_id
+                WHERE tblShowTypes.description = :constraint1"
+            );
+
         default:
             return NewResponse(400, "Invalid param name");
     }
