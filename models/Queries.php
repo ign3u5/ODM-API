@@ -196,6 +196,48 @@ function GetQuery($queryName) {
                 GROUP BY YEAR(tblShows.date_added)"
             );
 
+        case "FilmsForCountry":
+            return QueryResponse(
+                "SELECT tblShows.title 
+                FROM tblShows
+                INNER JOIN tblShowCountries
+                    ON tblShows.show_id = tblShowCountries.show_id
+                INNER JOIN tblCountries
+                    ON tblShowCountries.country_id = tblCountries.country_id
+                WHERE tblCountries.name = :constraint1"
+            );
+        
+        case "TopDirectors":
+            return QueryResponse(
+                "SELECT tblDirectors.name, COUNT(tblShowDirectors.show_id)
+                FROM tblDirectors
+                INNER JOIN tblShowDirectors
+                    ON tblDirectors.director_id = tblShowDirectors.director_id
+                GROUP BY tblDirectors.name
+                ORDER BY COUNT(tblShowDirectors.show_id) DESC
+                LIMIT 10"
+            );
+
+        case "FilmsByDirector":
+            return QueryResponse(
+                "SELECT tblShows.title
+                FROM tblShows
+                INNER JOIN tblShowDirectors
+                    ON tblShows.show_id = tblShowDirectors.show_id
+                INNER JOIN tblDirectors
+                    ON tblShowDirectors.director_id = tblDirectors.director_id
+                WHERE tblDirectors.name = :constraint1"
+            );
+
+        case "MostPopularYear":
+            return QueryResponse(
+                "SELECT tblShows.year_of_release, COUNT(tblShows.show_id)
+                FROM tblShows
+                GROUP BY tblShows.year_of_release
+                ORDER BY COUNT(tblShows.show_id) DESC
+                LIMIT 1"
+            );
+
         default:
             return NewResponse(400, "Invalid param name");
     }
