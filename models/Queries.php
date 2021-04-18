@@ -277,6 +277,17 @@ function GetQuery($queryName) {
                 LIMIT :limit"
             );
 
+        case "MoviesForGenre":
+            return QueryResponse(
+                "SELECT tblShows.title, tblShows.description
+                FROM tblShows
+                INNER JOIN tblShowGenres
+                    ON tblShows.show_id = tblShowGenres.show_id
+                INNER JOIN tblGenres
+                    ON tblShowGenres.genre_id = tblGenres.genre_id
+                WHERE tblGenres.name = :constraint1"
+            );
+
         default:
             return NewResponse(400, "Invalid param name");
     }
