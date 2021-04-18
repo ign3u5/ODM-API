@@ -264,6 +264,19 @@ function GetQuery($queryName) {
                 ORDER BY tblShows.duration DESC"
             );
 
+        case "TopGenres":
+            return QueryResponse(
+                "SELECT tblGenres.name, COUNT(tblShows.show_id)
+                FROM tblGenres
+                INNER JOIN tblShowGenres
+                    ON tblGenres.genre_id = tblShowGenres.genre_id
+                INNER JOIN tblShows
+                    ON tblShowGenres.show_id = tblShows.show_id
+                GROUP BY tblGenres.genre_id
+                ORDER BY COUNT(tblShows.show_id) DESC
+                LIMIT :limit"
+            );
+
         default:
             return NewResponse(400, "Invalid param name");
     }
