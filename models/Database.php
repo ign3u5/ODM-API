@@ -1,6 +1,6 @@
 <?php
     require_once __DIR__."/../handlers/ResponseHandler.php";
-    require_once __DIR__."/../Config.php";
+    require_once __DIR__."/../config.php";
     class Database {
         private $server;
         private $name;
